@@ -1,80 +1,96 @@
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function HomeScreen() {
-
-
-  const [text, setText ] = useState("")
-
+  const [text, setText] = useState("");
+  const screenWidth = Dimensions.get("window").width;
 
   return (
-    <>
-      <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-      
-        <Text>Welcome!</Text>
-      
-        <TextInput placeholder="Email" style={styles.input}></TextInput>
-        <TextInput placeholder="Password" style={styles.input}></TextInput>
 
-        <TouchableOpacity onPress={() => console.log("Button Clicked!")}>
-          <View>
-            <Text style={styles.button}>Login</Text>
-          </View>
+    <View style={styles.container}>
+      <Text style={styles.title}>Welcome!</Text>
+
+      <TextInput placeholder="Email" style={styles.input} />
+      <TextInput placeholder="Password" style={styles.input} />
+
+      <TouchableOpacity style={styles.button} onPress={() => console.log("Button Clicked!")}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => console.log("Button Clicked!")}>
+        <Text style={[styles.link, styles.red]}>Forgot Password?</Text>
+      </TouchableOpacity>
+
+      <View style={styles.socialContainer}>
+        <TouchableOpacity>
+          <Text style={[styles.link, { color: "#d12121" }]}>Google</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => console.log("Button Clicked!")}>
-          <View>
-            <Text style={{color:"red"}}>Forgot Password?</Text>
-          </View>
+        <TouchableOpacity>
+          <Text style={[styles.link, styles.blue]}>Facebook</Text>
         </TouchableOpacity>
-
-        <View  style={{flexDirection: "row", justifyContent: "space-around", width: 400}}>
-
-            <TouchableOpacity onPress={() => console.log("Button Clicked!")}>
-              <View>
-                <Text style={{color:"red"}}>Google</Text>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => console.log("Button Clicked!")}>
-              <View>
-                <Text style={{color:"blue"}}>FaceBook</Text>
-              </View>
-            </TouchableOpacity>
-
-        </View>
-
       </View>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
 
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 30,
+  },
+
+  title: {
+    alignSelf: "flex-start",
+    fontSize: 20,
+    marginBottom: 10,
+  },
+
+  input: {
+    backgroundColor: "#f2f2f2",
+    color: "#8f8f8f",
+    borderRadius: 15,
+    height: 45,
+    paddingHorizontal: 10,
+    width: "100%", 
+    marginBottom: 10,
+  },
+
   button: {
-    backgroundColor: "red",
+    backgroundColor: "#d12121",
     borderRadius: 15,
-    width: 310,
-    height: 40,
-    padding: 10
+    paddingVertical: 12,
+    width: "100%", 
+    alignItems: "center",
+    marginVertical: 10,
   },
 
-  input:{
-    backgroundColor: "gray",
-    borderRadius: 15,
-    height: 40,
-    width: 310,
-    padding: 10
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 
-  colorBlue:{
-    color: "blue",
-    fontSize: 12
+  red: {
+    color: "#d12121",
   },
 
-  square: {
-    height: 300,
-    width: 300,
-    backgroundColor: 'rebeccapurple'
-  }
-})
+  blue: {
+    color: "#2145d1",
+  },
+
+  link: {
+    fontWeight: "600",
+    marginVertical: 5,
+  },
+
+  socialContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%", 
+    marginTop: 20,
+  },
+});
