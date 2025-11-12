@@ -8,36 +8,39 @@ export default function HomeScreen() {
   return (
 
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome!</Text>
+      <Text style={styles.title}>Please Insert Your Data!</Text>
 
-      <TextInput placeholder="Email" style={styles.input} />
-      <TextInput placeholder="Password" style={styles.input} />
+      <TextInput placeholder="Username" style={styles.input} />
+      <TextInput placeholder="Name" style={styles.input} />
+      <TextInput placeholder="Email"  style={styles.input} />
+      <TextInput placeholder="Password" secureTextEntry style={styles.input} />
 
       <TouchableOpacity style={styles.button} onPress={() => console.log("Button Clicked!")}>
-        <Text style={styles.buttonText}>Login</Text>
+        <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => console.log("Button Clicked!")}>
-        <Text style={[styles.link, styles.red]}>Forgot Password?</Text>
+        <Text style={[styles.link, styles.red]}>Need Help?</Text>
       </TouchableOpacity>
 
       {/* Social */}
+
+      <Text style={[styles.subtitle, {alignSelf:'center', marginTop: 24}]}>Access Quickly</Text>
+
       <View style={styles.socialContainer}>
-        <TouchableOpacity>
-          <Text style={[styles.link, { color: "#d12121" }]}>Google</Text>
-        </TouchableOpacity>
 
         <TouchableOpacity>
           <Text style={[styles.link, styles.blue]}>Facebook</Text>
         </TouchableOpacity>
-      </View>
 
-
-      <View style={{display:'flex', flexDirection: 'row', marginVertical: 14}}>
-        <Text style={{alignSelf: 'center', marginHorizontal: 10, color: '#8f8f8f'}}>Don't have an account?</Text>
         <TouchableOpacity>
-          <Text style={[styles.link, styles.red]}>Sign Up</Text>
+          <Text style={[styles.link, { color: "#d12121" }]}>Google</Text>
         </TouchableOpacity>
+        
+        <TouchableOpacity>
+        <Text style={[styles.link, styles.blue]}>Twitter</Text>
+        </TouchableOpacity>
+
       </View>
 
     </View>
@@ -57,6 +60,13 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     fontSize: 20,
     marginBottom: 10,
+  },
+
+  subtitle: {
+    color:"rgb(126, 126, 126)",
+    alignSelf: "flex-start",
+    fontSize: 16,
+    marginVertical: 10,
   },
 
   input: {
