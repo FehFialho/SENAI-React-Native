@@ -26,7 +26,7 @@ export default function HomeScreen() {
 
   return (
 
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: "#171717"}]}>
       <Text style={styles.title}>Please Insert Your Data!</Text>
 
       {/* <TextInput placeholder="Username" style={styles.input} />
@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    color:"rgb(156, 156, 156)",
     alignSelf: "flex-start",
     fontSize: 20,
     marginBottom: 10,
@@ -90,8 +91,8 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    backgroundColor: "#f2f2f2",
-    color: "#8f8f8f",
+    backgroundColor: "#333333",
+    color: "rgb(156, 156, 156)",
     borderRadius: 15,
     height: 45,
     paddingHorizontal: 10,
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: "#fff",
+    color: "#c7c7c7",
     fontWeight: "bold",
     fontSize: 16,
   },
