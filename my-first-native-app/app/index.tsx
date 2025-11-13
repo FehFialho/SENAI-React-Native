@@ -1,21 +1,41 @@
-import { useState } from "react";
-import { Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { app } from '../firebaseConfig';
 
 export default function HomeScreen() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [text, setText] = useState("");
-  const screenWidth = Dimensions.get("window").width;
+  // const screenWidth = Dimensions.get("window").width;
+
+  const auth = getAuth(app)
+
+  const signUp = () => {
+    if ( password === confirmPassword){
+      return createUserWithEmailAndPassword(auth, email, password)
+    } else {
+      return alert("erro")
+    }
+  }
+
+  useEffect(() => {
+    console.log(email, password, confirmPassword)
+  }, [email, password, confirmPassword])
 
   return (
 
     <View style={styles.container}>
       <Text style={styles.title}>Please Insert Your Data!</Text>
 
-      <TextInput placeholder="Username" style={styles.input} />
-      <TextInput placeholder="Name" style={styles.input} />
-      <TextInput placeholder="Email"  style={styles.input} />
-      <TextInput placeholder="Password" secureTextEntry style={styles.input} />
+      {/* <TextInput placeholder="Username" style={styles.input} />
+      <TextInput placeholder="Name" style={styles.input} /> */}
+      <TextInput placeholder="Email"  style={styles.input} onChangeText={(value) => setEmail(value)} />
+      <TextInput placeholder="Password" secureTextEntry style={styles.input} onChangeText={(value) => setPassword(value)} />
+      <TextInput placeholder="Confirm Password" secureTextEntry style={styles.input}  onChangeText={(value) => setConfirmPassword(value)} />
 
-      <TouchableOpacity style={styles.button} onPress={() => console.log("Button Clicked!")}>
+      <TouchableOpacity style={styles.button} onPress={signUp}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
 
