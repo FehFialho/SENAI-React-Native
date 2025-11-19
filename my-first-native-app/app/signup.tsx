@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import Swal from 'sweetalert2';
 import { app } from '../firebaseConfig';
 
 export default function HomeScreen() {
@@ -15,21 +16,37 @@ export default function HomeScreen() {
 
   let minPassLength = 6;
 
-  const signUp = () => {
+  const signUp = async () => {
     if ( password.length > minPassLength ){
       if (password === confirmPassword){
         try {
-          createUserWithEmailAndPassword(auth, email, password)
-          alert("Cadastrado com Sucesso!")
+          await createUserWithEmailAndPassword(auth, email, password)
+          Swal.fire({
+            icon: "success",
+            title: "Success!!",
+            text: "Your account has been created. Welcome!",
+          });
           return router.navigate('/');
         } catch(e){
-          return alert("Email já existe" + e)
-        }
+            return Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "This email is already registred!",
+            });
+          }
       } else {
-        return alert("As senhas não coincidem!")
+        return Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "The passwords must be identical!",
+        });
       }
     } else {
-      return alert("A senha deve conter no mínimo 6 caracteres!")
+        return Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "The Password must be at least 6 char!",
+        });
     }
   }
 
