@@ -1,88 +1,44 @@
-import { router } from 'expo-router';
-import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
-import { useEffect, useState } from "react";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { app } from '../firebaseConfig';
+import { router } from "expo-router";
+import { useState } from "react";
+import { Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function HomeScreen() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
   const [text, setText] = useState("");
-  // const screenWidth = Dimensions.get("window").width;
-
-  const auth = getAuth(app)
-
-  let minPassLength = 6;
-
-  const signUp = () => {
-    if ( password.length > minPassLength ){
-      if (password === confirmPassword){
-        try {
-          createUserWithEmailAndPassword(auth, email, password)
-          alert("Cadastrado com Sucesso!")
-          return router.navigate('/login');
-        } catch(e){
-          return alert("Email já existe" + e)
-        }
-      } else {
-        return alert("As senhas não coincidem!")
-      }
-    } else {
-      return alert("A senha deve conter no mínimo 6 caracteres!")
-    }
-  }
-
-
-  // const signUp = () => {
-  //   if ( password === confirmPassword){
-  //     return createUserWithEmailAndPassword(auth, email, password)
-  //   } else {
-  //     return alert("erro")
-  //   }
-  // }
-
-  useEffect(() => {
-    console.log(email, password, confirmPassword)
-  }, [email, password, confirmPassword])
+  const screenWidth = Dimensions.get("window").width;
 
   return (
 
     <View style={[styles.container, {backgroundColor: "#171717"}]}>
-      <Text style={styles.title}>Please Insert Your Data!</Text>
+      <Text style={styles.title}>Welcome!</Text>
 
-      {/* <TextInput placeholder="Username" style={styles.input} />
-      <TextInput placeholder="Name" style={styles.input} /> */}
-      <TextInput placeholder="Email"  style={styles.input} onChangeText={(value) => setEmail(value)} />
-      <TextInput placeholder="Password" secureTextEntry style={styles.input} onChangeText={(value) => setPassword(value)} />
-      <TextInput placeholder="Confirm Password" secureTextEntry style={styles.input}  onChangeText={(value) => setConfirmPassword(value)} />
+      <TextInput placeholder="Email" style={styles.input} />
+      <TextInput placeholder="Password" style={styles.input} />
 
-      <TouchableOpacity style={styles.button} onPress={signUp}>
-        <Text style={styles.buttonText}>Register</Text>
+      <TouchableOpacity style={styles.button} onPress={() => console.log("Button Clicked!")}>
+        <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => console.log("Button Clicked!")}>
-        <Text style={[styles.link, styles.red]}>Need Help?</Text>
+        <Text style={[styles.link, styles.red]}>Forgot Password?</Text>
       </TouchableOpacity>
 
       {/* Social */}
-
-      <Text style={[styles.subtitle, {alignSelf:'center', marginTop: 24}]}>Access Quickly</Text>
-
       <View style={styles.socialContainer}>
+        <TouchableOpacity>
+          <Text style={[styles.link, { color: "#d12121" }]}>Google</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity>
           <Text style={[styles.link, styles.blue]}>Facebook</Text>
         </TouchableOpacity>
+      </View>
 
-        <TouchableOpacity>
-          <Text style={[styles.link, { color: "#d12121" }]}>Google</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity>
-        <Text style={[styles.link, styles.blue]}>Twitter</Text>
-        </TouchableOpacity>
 
+      <View style={{display:'flex', flexDirection: 'row', marginVertical: 14}}>
+        <Text style={{alignSelf: 'center', marginHorizontal: 10, color: '#8f8f8f'}}>Don't have an account?</Text>
+        <TouchableOpacity>
+          <Text style={[styles.link, styles.red]} onPress={() => router.navigate('/signup')}>Sign Up</Text>
+        </TouchableOpacity>
       </View>
 
     </View>
@@ -90,6 +46,7 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+
 
   container: {
     flex: 1,
