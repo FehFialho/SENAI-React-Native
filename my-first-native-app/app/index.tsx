@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -12,13 +13,34 @@ export default function HomeScreen() {
 
   const auth = getAuth(app)
 
+  let minPassLength = 6;
+
   const signUp = () => {
-    if ( password === confirmPassword){
-      return createUserWithEmailAndPassword(auth, email, password)
+    if ( password.length > minPassLength ){
+      if (password === confirmPassword){
+        try {
+          createUserWithEmailAndPassword(auth, email, password)
+          alert("Cadastrado com Sucesso!")
+          return router.navigate('/login');
+        } catch(e){
+          return alert("Email já existe" + e)
+        }
+      } else {
+        return alert("As senhas não coincidem!")
+      }
     } else {
-      return alert("erro")
+      return alert("A senha deve conter no mínimo 6 caracteres!")
     }
   }
+
+
+  // const signUp = () => {
+  //   if ( password === confirmPassword){
+  //     return createUserWithEmailAndPassword(auth, email, password)
+  //   } else {
+  //     return alert("erro")
+  //   }
+  // }
 
   useEffect(() => {
     console.log(email, password, confirmPassword)
