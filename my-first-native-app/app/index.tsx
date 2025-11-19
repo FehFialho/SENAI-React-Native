@@ -1,20 +1,30 @@
+import { app } from "@/firebaseConfig";
 import { router } from "expo-router";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function HomeScreen() {
-  const [text, setText] = useState("");
-  const screenWidth = Dimensions.get("window").width;
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  //const screenWidth = Dimensions.get("window").width;
+
+  const auth = getAuth(app)
+
+  const signIn = async () => {
+    await signInWithEmailAndPassword(auth, email, password)
+    router.navigate('/home')
+  }
 
   return (
 
     <View style={[styles.container, {backgroundColor: "#171717"}]}>
       <Text style={styles.title}>Welcome!</Text>
 
-      <TextInput placeholder="Email" style={styles.input} />
-      <TextInput placeholder="Password" style={styles.input} />
+      <TextInput placeholder="Email" style={styles.input} onChangeText={(value) => setEmail(value)} />
+      <TextInput placeholder="Password" style={styles.input} onChangeText={(value) => setPassword(value)} />
 
-      <TouchableOpacity style={styles.button} onPress={() => console.log("Button Clicked!")}>
+      <TouchableOpacity style={styles.button} onPress={() => signIn()}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
