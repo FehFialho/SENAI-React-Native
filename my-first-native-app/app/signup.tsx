@@ -5,7 +5,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-nativ
 import Swal from 'sweetalert2';
 import { app } from '../firebaseConfig';
 
-export default function HomeScreen() {
+export default function SignUp() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -49,7 +49,6 @@ export default function HomeScreen() {
         });
     }
   }
-
 
   // const signUp = () => {
   //   if ( password === confirmPassword){
@@ -97,7 +96,7 @@ export default function HomeScreen() {
         </TouchableOpacity>
         
         <TouchableOpacity>
-        <Text style={[styles.link, styles.blue]}>Twitter</Text>
+          <Text style={[styles.link, styles.blue]}>Twitter</Text>
         </TouchableOpacity>
 
       </View>

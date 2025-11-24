@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import Swal from "sweetalert2";
 
 export default function HomeScreen() {
   const [email, setEmail] = useState("");
@@ -12,8 +13,17 @@ export default function HomeScreen() {
   const auth = getAuth(app)
 
   const signIn = async () => {
-    await signInWithEmailAndPassword(auth, email, password)
-    router.navigate('/home')
+  
+    try {
+      await signInWithEmailAndPassword(auth, email, password)
+      router.navigate('/home')
+    } catch(e){
+        return Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Wrong Password or Email!",
+        });
+      }
   }
 
   return (
