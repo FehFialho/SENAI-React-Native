@@ -17,6 +17,8 @@ export default function Home() {
     });
   };
 
+
+
   return (
 
     <View style={[styles.container, styles.main, {backgroundColor: "#171717"}]}>
@@ -25,19 +27,34 @@ export default function Home() {
 
       {/* Title */}
       <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Title</Text>
-      <TextInput placeholder="Title" placeholderTextColor="#777" style={styles.input} />
+      <TextInput placeholder="Movie Title" placeholderTextColor="#777" style={styles.input} />
 
       {/* Year */}
       <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Year</Text>
-      <TextInput placeholder="Year" placeholderTextColor="#777" style={styles.input} />
+      <TextInput placeholder="DD-MM-YYYY" placeholderTextColor="#777" style={styles.input} />
 
       {/* Image */}
       <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Poster</Text>
       <TextInput placeholder="Image Link" placeholderTextColor="#777" style={styles.input} />
 
+      {/* Rate */}
+      <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Rate</Text>
+      <TextInput placeholder="Between 1 and 10" placeholderTextColor="#777" style={styles.input} />
+    
+      {/* Review */}
+      <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Review</Text>
+      <TextInput
+        placeholder="Write your review..."
+        placeholderTextColor="#777"
+        style={styles.textArea}
+        multiline={true}          // transforma em textarea
+        numberOfLines={5}         // altura inicial
+        textAlignVertical="top"   // texto começa no topo
+        maxLength={800}          // limite de caracteres
+      />
 
       {/* GENRES */}
-      <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Gênero</Text>
+      <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Genre</Text>
       <View style={[styles.grid, styles.box]}>
         {generosLista.map((g) => (
             <Pressable
@@ -78,6 +95,19 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
+
+    textArea: {
+        backgroundColor: "#333333",
+        color: "rgb(156, 156, 156)",
+        borderRadius: 15,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        width: "100%",
+        marginBottom: 10,
+        height: 120,
+        textAlignVertical: "top",
+        textAlign: "left",
+    },   
 
     box: {
         backgroundColor: "#333333",
@@ -123,7 +153,7 @@ const styles = StyleSheet.create({
     color:"rgb(126, 126, 126)",
     alignSelf: "flex-start",
     fontSize: 16,
-    marginVertical: 4,
+    marginVertical: 6,
   },
 
   input: {
@@ -142,7 +172,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     width: "100%", 
     alignItems: "center",
-    marginTop: 12,
+    marginTop: 16,
   },
 
   buttonText: {
