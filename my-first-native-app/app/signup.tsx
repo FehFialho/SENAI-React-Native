@@ -50,14 +50,6 @@ export default function SignUp() {
     }
   }
 
-  // const signUp = () => {
-  //   if ( password === confirmPassword){
-  //     return createUserWithEmailAndPassword(auth, email, password)
-  //   } else {
-  //     return alert("erro")
-  //   }
-  // }
-
   useEffect(() => {
     console.log(email, password, confirmPassword)
   }, [email, password, confirmPassword])
