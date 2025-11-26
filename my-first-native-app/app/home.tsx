@@ -1,7 +1,8 @@
 import { getAuth } from 'firebase/auth';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import Swal from 'sweetalert2';
 import { app, db } from '../firebaseConfig';
 
 const generosLista = ["Ação", "Comédia", "Romance", "Drama", "Terror", "Ficção"];
@@ -26,8 +27,8 @@ export default function Home() {
   async function registerMovie() {
     try{
 
-      if (!title || !rate){
-        console.log("Título e Nota Obrigatórios!");
+      if (!title || !generos || !rate){
+        console.log("Título, Gênero e Nota Obrigatórios!");
         return;
       }
 
@@ -36,15 +37,26 @@ export default function Home() {
         year,
         poster,
         rate,
-        review
-      }
+        review,
+        generos,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      };
 
       await addDoc(collection(db, "movies"), movie);
-      console.log("Cadastrado!");
+      Swal.fire({
+        icon: "success",
+        title: "Success!!",
+        text: "Your movie has been added!",
+      });
       
 
     } catch (err){
-      console.log("Erro ao Cadastrar: ", err);
+      return Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "ERROR! " +  err,
+      });
     }
   }
 
@@ -59,8 +71,8 @@ export default function Home() {
       <TextInput placeholder="Movie Title" onChangeText={(title) => setTitle(title)} placeholderTextColor="#777" style={styles.input} />
 
       {/* Year */}
-      <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Year</Text>
-      <TextInput placeholder="DD-MM-YYYY" onChangeText={(year) => setYear(year)} placeholderTextColor="#777" style={styles.input} />
+      <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Releasing Year</Text>
+      <TextInput placeholder="YYYY" onChangeText={(year) => setYear(year)} placeholderTextColor="#777" style={styles.input} />
 
       {/* Image */}
       <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Poster</Text>
@@ -116,7 +128,7 @@ export default function Home() {
         ))}
         </View>
 
-        <TouchableOpacity style={[styles.button, { marginTop: "auto" }]}>
+        <TouchableOpacity style={[styles.button]}>
           <Text style={styles.buttonText} onPress={() => registerMovie()}>Register Movie</Text>
         </TouchableOpacity>
 
@@ -202,7 +214,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     width: "100%", 
     alignItems: "center",
-    marginTop: 16,
+    marginTop: 24,
   },
 
   buttonText: {
