@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { getAuth } from 'firebase/auth';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import React, { useState } from "react";
@@ -9,26 +10,34 @@ const generosLista = ["Ação", "Comédia", "Romance", "Drama", "Terror", "Ficç
 
 export default function Home() {
 
-  const auth = getAuth(app)
+  const auth = getAuth(app);
+
   const [title, setTitle] = useState("");
   const [year, setYear] = useState("");
   const [poster, setPoster] = useState("");
   const [rate, setRate] = useState("");
   const [review, setReview] = useState("");
-  const [generos, setGeneros] = useState<Record<string, boolean>>({});
+  const [generos, setGeneros] = useState<string[]>([]);
 
   const toggle = (g: string) => {
-    setGeneros({ 
-      ...generos, 
-      [g]: !generos[g] 
-    });
+    if (generos.includes(g)) {
+      // remover se já existe
+      setGeneros(generos.filter(item => item !== g));
+    } else {
+      // adicionar
+      setGeneros([...generos, g]);
+    }
   };
 
   async function registerMovie() {
-    try{
+    try {
 
-      if (!title || !generos || !rate){
-        console.log("Título, Gênero e Nota Obrigatórios!");
+      if (!title || !rate) {
+        Swal.fire({
+          icon: "error",
+          title: "Missing data",
+          text: "Title and Rate are required!",
+        });
         return;
       }
 
@@ -38,99 +47,134 @@ export default function Home() {
         poster,
         rate,
         review,
-        generos,
+        generos,                   
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp()
       };
 
       await addDoc(collection(db, "movies"), movie);
+
       Swal.fire({
         icon: "success",
         title: "Success!!",
         text: "Your movie has been added!",
       });
-      
 
-    } catch (err){
-      return Swal.fire({
+      // RESET
+      setTitle("");
+      setYear("");
+      setPoster("");
+      setRate("");
+      setReview("");
+      setGeneros([]);
+
+    } catch (err) {
+      Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "ERROR! " +  err,
+        text: "ERROR: " + err,
       });
     }
   }
 
   return (
 
-    <View style={[styles.container, styles.main, {backgroundColor: "#171717"}]}>
-        
-      <Text style={[styles.title, {alignSelf:'center'}]}>Hello There!</Text>
+    <View style={[styles.container, styles.main, { backgroundColor: "#171717" }]}>
+      
+      <Text style={[styles.title, { alignSelf: 'center' }]}>Hello There!</Text>
 
       {/* Title */}
-      <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Title</Text>
-      <TextInput placeholder="Movie Title" onChangeText={(title) => setTitle(title)} placeholderTextColor="#777" style={styles.input} />
+      <Text style={styles.subtitle}>Title</Text>
+      <TextInput
+        value={title}
+        placeholder="Movie Title"
+        onChangeText={setTitle}
+        placeholderTextColor="#777"
+        style={styles.input}
+      />
 
       {/* Year */}
-      <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Releasing Year</Text>
-      <TextInput placeholder="YYYY" onChangeText={(year) => setYear(year)} placeholderTextColor="#777" style={styles.input} />
+      <Text style={styles.subtitle}>Releasing Year</Text>
+      <TextInput
+        value={year}
+        placeholder="YYYY"
+        onChangeText={setYear}
+        placeholderTextColor="#777"
+        style={styles.input}
+      />
 
-      {/* Image */}
-      <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Poster</Text>
-      <TextInput placeholder="Image Link" onChangeText={(image) => setPoster(image)} placeholderTextColor="#777" style={styles.input} />
+      {/* Poster */}
+      <Text style={styles.subtitle}>Poster</Text>
+      <TextInput
+        value={poster}
+        placeholder="Image Link"
+        onChangeText={setPoster}
+        placeholderTextColor="#777"
+        style={styles.input}
+      />
 
       {/* Rate */}
-      <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Rate</Text>
-      <TextInput placeholder="Between 1 and 10" onChangeText={(rate) => setRate(rate)} placeholderTextColor="#777" style={styles.input} />
-    
-      {/* Review */}
-      <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Review</Text>
+      <Text style={styles.subtitle}>Rate</Text>
       <TextInput
+        value={rate}
+        placeholder="Between 1 and 10"
+        onChangeText={setRate}
+        placeholderTextColor="#777"
+        style={styles.input}
+      />
+
+      {/* Review */}
+      <Text style={styles.subtitle}>Review</Text>
+      <TextInput
+        value={review}
         placeholder="Write your review..."
-        onChangeText={(review => setReview(review))}
+        onChangeText={setReview}
         placeholderTextColor="#777"
         style={styles.textArea}
-        multiline={true}          // transforma em textarea
-        numberOfLines={5}         // altura inicial
-        textAlignVertical="top"   // texto começa no topo
-        maxLength={800}          // limite de caracteres
+        multiline
       />
 
       {/* GENRES */}
-      <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Genre</Text>
+      <Text style={styles.subtitle}>Genre</Text>
       <View style={[styles.grid, styles.box]}>
         {generosLista.map((g) => (
-            <Pressable
+          <Pressable
             key={g}
             onPress={() => toggle(g)}
             style={styles.checkboxItem}
-            >
+          >
             <View
-                style={{
+              style={{
                 width: 24,
                 height: 24,
                 borderWidth: 2,
                 borderColor: "#d12121",
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: generos[g] ? "#d12121" : "transparent",
+                backgroundColor: generos.includes(g) ? "#d12121" : "transparent",
                 borderRadius: 6,
-                }}
+              }}
             >
-                {generos[g] && (
+              {generos.includes(g) && (
                 <Text style={{ color: "white", fontSize: 16 }}>✓</Text>
-                )}
+              )}
             </View>
 
             <Text style={{ marginLeft: 10, color: "rgb(156, 156, 156)" }}>
-                {g}
+              {g}
             </Text>
-            </Pressable>
+          </Pressable>
         ))}
-        </View>
+      </View>
 
-        <TouchableOpacity style={[styles.button]}>
-          <Text style={styles.buttonText} onPress={() => registerMovie()}>Register Movie</Text>
-        </TouchableOpacity>
+      {/* Button */}
+      <TouchableOpacity style={styles.button} onPress={registerMovie}>
+        <Text style={styles.buttonText}>Register Movie</Text>
+      </TouchableOpacity>
+    
+      <TouchableOpacity style={styles.button} onPress={() => router.navigate('/list')}>
+        <Text style={styles.buttonText}>Movie List</Text>
+      </TouchableOpacity>
 
     </View>
   );
@@ -138,63 +182,59 @@ export default function Home() {
 
 const styles = StyleSheet.create({
 
-    textArea: {
-        backgroundColor: "#333333",
-        color: "rgb(156, 156, 156)",
-        borderRadius: 15,
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-        width: "100%",
-        marginBottom: 10,
-        height: 120,
-        textAlignVertical: "top",
-        textAlign: "left",
-    },   
+  textArea: {
+    backgroundColor: "#333333",
+    color: "rgb(156, 156, 156)",
+    borderRadius: 15,
+    padding: 10,
+    width: "100%",
+    marginBottom: 10,
+    height: 120,
+    textAlignVertical: "top",
+  },
 
-    box: {
-        backgroundColor: "#333333",
-        borderRadius: 15,
-        paddingVertical: 12,
-        paddingHorizontal: 14
-    },
+  box: {
+    backgroundColor: "#333333",
+    borderRadius: 15,
+    paddingVertical: 12,
+    paddingHorizontal: 14
+  },
 
-    grid: {
-        width: "100%",
-        flexDirection: "row",
-        flexWrap: "wrap",
-        justifyContent: "space-between",
-    },
-    
-    checkboxItem: {
-        width: "30%", // 3 por linha (30% + espaçamento)
-        flexDirection: "row",
-        alignItems: "center",
-        marginVertical: 6,
-    },
+  grid: {
+    width: "100%",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
 
-    main: {
-        height: "100%",
-        paddingVertical: 60
-    },
+  checkboxItem: {
+    width: "30%",
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 6,
+  },
+
+  main: {
+    height: "100%",
+    paddingVertical: 60
+  },
 
   container: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 30,
   },
 
   title: {
-    color:"rgb(156, 156, 156)",
-    alignSelf: "flex-start",
+    color: "rgb(156, 156, 156)",
     fontSize: 20,
     marginBottom: 10,
   },
 
   subtitle: {
-    color:"rgb(126, 126, 126)",
-    alignSelf: "flex-start",
+    color: "rgb(126, 126, 126)",
     fontSize: 16,
+    alignSelf: "flex-start",
     marginVertical: 6,
   },
 
@@ -204,7 +244,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     height: 45,
     paddingHorizontal: 10,
-    width: "100%", 
+    width: "100%",
     marginBottom: 10,
   },
 
@@ -212,7 +252,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#d12121",
     borderRadius: 15,
     paddingVertical: 12,
-    width: "100%", 
+    width: "100%",
     alignItems: "center",
     marginTop: 24,
   },
@@ -223,23 +263,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
-  red: {
-    color: "#d12121",
-  },
-
-  blue: {
-    color: "#2145d1",
-  },
-
-  link: {
-    fontWeight: "600",
-    marginVertical: 5,
-  },
-
-  socialContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: "100%", 
-    marginTop: 20,
-  },
 });
