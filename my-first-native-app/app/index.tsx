@@ -1,7 +1,7 @@
 import { app } from "@/firebaseConfig";
 import { router } from "expo-router";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Swal from "sweetalert2";
 
