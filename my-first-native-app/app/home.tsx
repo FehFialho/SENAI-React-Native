@@ -1,13 +1,19 @@
 import { getAuth } from 'firebase/auth';
+import { addDoc, collection } from 'firebase/firestore';
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { app } from '../firebaseConfig';
+import { app, db } from '../firebaseConfig';
 
 const generosLista = ["Ação", "Comédia", "Romance", "Drama", "Terror", "Ficção"];
 
 export default function Home() {
 
   const auth = getAuth(app)
+  const [title, setTitle] = useState("");
+  const [year, setYear] = useState("");
+  const [poster, setPoster] = useState("");
+  const [rate, setRate] = useState("");
+  const [review, setReview] = useState("");
   const [generos, setGeneros] = useState<Record<string, boolean>>({});
 
   const toggle = (g: string) => {
@@ -17,7 +23,30 @@ export default function Home() {
     });
   };
 
+  async function registerMovie() {
+    try{
 
+      if (!title || !rate){
+        console.log("Título e Nota Obrigatórios!");
+        return;
+      }
+
+      const movie = {
+        title,
+        year,
+        poster,
+        rate,
+        review
+      }
+
+      await addDoc(collection(db, "movies"), movie);
+      console.log("Cadastrado!");
+      
+
+    } catch (err){
+      console.log("Erro ao Cadastrar: ", err);
+    }
+  }
 
   return (
 
@@ -27,24 +56,25 @@ export default function Home() {
 
       {/* Title */}
       <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Title</Text>
-      <TextInput placeholder="Movie Title" placeholderTextColor="#777" style={styles.input} />
+      <TextInput placeholder="Movie Title" onChangeText={(title) => setTitle(title)} placeholderTextColor="#777" style={styles.input} />
 
       {/* Year */}
       <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Year</Text>
-      <TextInput placeholder="DD-MM-YYYY" placeholderTextColor="#777" style={styles.input} />
+      <TextInput placeholder="DD-MM-YYYY" onChangeText={(year) => setYear(year)} placeholderTextColor="#777" style={styles.input} />
 
       {/* Image */}
       <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Poster</Text>
-      <TextInput placeholder="Image Link" placeholderTextColor="#777" style={styles.input} />
+      <TextInput placeholder="Image Link" onChangeText={(image) => setPoster(image)} placeholderTextColor="#777" style={styles.input} />
 
       {/* Rate */}
       <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Rate</Text>
-      <TextInput placeholder="Between 1 and 10" placeholderTextColor="#777" style={styles.input} />
+      <TextInput placeholder="Between 1 and 10" onChangeText={(rate) => setRate(rate)} placeholderTextColor="#777" style={styles.input} />
     
       {/* Review */}
       <Text style={[styles.subtitle, {alignSelf:'flex-start'}]}>Review</Text>
       <TextInput
         placeholder="Write your review..."
+        onChangeText={(review => setReview(review))}
         placeholderTextColor="#777"
         style={styles.textArea}
         multiline={true}          // transforma em textarea
@@ -87,7 +117,7 @@ export default function Home() {
         </View>
 
         <TouchableOpacity style={[styles.button, { marginTop: "auto" }]}>
-          <Text style={styles.buttonText}>Register Movie</Text>
+          <Text style={styles.buttonText} onPress={() => registerMovie()}>Register Movie</Text>
         </TouchableOpacity>
 
     </View>
